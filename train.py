@@ -6,14 +6,16 @@ from datasets import CIFAR10
 from models import CNN_CIFAR10
 
 
-def train_CIFAR10():
+def train_CIFAR10(dataset_name, model_name):
     BATCH_SIZE = 32
     LR = 0.001
-    EPOCH = 5
-    DIR = "./workspace/CIFAR10"
+    EPOCH = 6
+    DIR = "./workspace/"
 
-    train_loader = DataLoader(CIFAR10(train=True), batch_size=BATCH_SIZE)
-    model = CNN_CIFAR10()
+    if dataset_name == "CIFAR10":
+        train_loader = DataLoader(CIFAR10(train=True), batch_size=BATCH_SIZE)
+    if model_name == "CNN":
+        model = CNN_CIFAR10()
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr = LR)
@@ -37,7 +39,7 @@ def train_CIFAR10():
                 running_loss = 0.0
     print("Training finished")
 
-    torch.save(model.state_dict(), DIR + '_trained_model.pth')
+    torch.save(model.state_dict(), f'{DIR}{dataset_name}/{model_name}.pth')
     print("Model parameters saved")
 
 
