@@ -10,7 +10,7 @@ class CIFAR10(Dataset):
         if train:
             self.dataset = torchvision.datasets.CIFAR10(root='./data', train=True, transform=transform)
         else:
-            self.dataset = torchvision.datasets.CIFAR10(root='./data', train=False)
+            self.dataset = torchvision.datasets.CIFAR10(root='./data', train=False, transform=transform)
 
     def __len__(self):
         return len(self.dataset)

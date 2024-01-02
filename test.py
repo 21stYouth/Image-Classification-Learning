@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from datasets import CIFAR10
 from models import CNN_CIFAR10
@@ -11,11 +12,14 @@ def test_CIFAR10(dataset_name, model_name):
     DIR = "./workspace/"
 
     # 加载测试数据集
-    test_loader = DataLoader(CIFAR10(train=False), batch_size=BATCH_SIZE)
-
     if dataset_name == "CIFAR10":
-        model = CNN_CIFAR10()
+        transform = transforms.Compose([
+            transforms.ToTensor(),  # 转换为张量
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),  # 标准化
+        ])
+        test_loader = DataLoader(CIFAR10(train=False, transform=transform), batch_size=BATCH_SIZE)
     if model_name == "CNN":
+        model = CNN_CIFAR10()
         model.load_state_dict(torch.load(f'{DIR}{dataset_name}/{model_name}.pth'))
 
     # 测试模型
