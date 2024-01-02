@@ -6,8 +6,9 @@ import torchvision
 
 class CIFAR10(Dataset):
     def __init__(self, train, transform=None):
+        self.transform = transform
         if train:
-            self.dataset = torchvision.datasets.CIFAR10(root='./data', train=True)
+            self.dataset = torchvision.datasets.CIFAR10(root='./data', train=True, transform=transform)
         else:
             self.dataset = torchvision.datasets.CIFAR10(root='./data', train=False)
 
@@ -16,6 +17,7 @@ class CIFAR10(Dataset):
 
     def __getitem__(self, idx):
         image, target = self.dataset[idx]
-        image = transforms.ToTensor()(image)
+        if self.transform == None:
+            image = transforms.ToTensor()(image)
         return image, target
 

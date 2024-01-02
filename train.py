@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from datasets import CIFAR10
 from models import CNN_CIFAR10
@@ -9,11 +10,20 @@ from models import CNN_CIFAR10
 def train_CIFAR10(dataset_name, model_name):
     BATCH_SIZE = 32
     LR = 0.001
-    EPOCH = 6
+    EPOCH = 5
     DIR = "./workspace/"
 
     if dataset_name == "CIFAR10":
-        train_loader = DataLoader(CIFAR10(train=True), batch_size=BATCH_SIZE)
+        transform = transforms.Compose([
+            transforms.RandomHorizontalFlip(),  # 随机水平翻转
+            transforms.RandomVerticalFlip(),  # 随机垂直翻转
+            transforms.RandomRotation(10),  # 随机旋转，参数为旋转角度范围
+            transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),  # 随机颜色调整
+            transforms.RandomResizedCrop(32, scale=(0.8, 1.0), ratio=(0.8, 1.2)),  # 随机裁剪和缩放
+            transforms.ToTensor(),  # 转换为张量
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),  # 标准化
+        ])
+        train_loader = DataLoader(CIFAR10(train=True, transform=transform), batch_size=BATCH_SIZE)
     if model_name == "CNN":
         model = CNN_CIFAR10()
 
