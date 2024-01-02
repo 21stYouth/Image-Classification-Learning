@@ -1,0 +1,21 @@
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms
+from PIL import Image
+import torchvision
+
+class CIFAR10(Dataset):
+    def __init__(self, train, transform=None):
+        if train:
+            self.dataset = torchvision.datasets.CIFAR10(root='./data', train=True)
+        else:
+            self.dataset = torchvision.datasets.CIFAR10(root='./data', train=False)
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, idx):
+        image, target = self.dataset[idx]
+        image = transforms.ToTensor()(image)
+        return image, target
+
